@@ -6,7 +6,7 @@ let paperList = async function(){
 };
 let noteList = async function(paperId){
     const arrayOfNotes = [];
-    const notelist = await note.findAll({where:{paper_id: paperId}, attributes: ['id', 'done', 'note', 'paper_id']});
+    const notelist = await note.findAll({where:{paper_id: paperId}, order:[['id', 'ASC']], attributes: ['id', 'done', 'note', 'paper_id']});
     notelist.map(x=>arrayOfNotes.push(x.dataValues));
     return arrayOfNotes
 };
