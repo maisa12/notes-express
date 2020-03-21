@@ -1,14 +1,12 @@
 const paper = require('./models/paper');
 const note = require('./models/note');
 let paperList = async function(){
-    const paperlist = await paper.findAll({attributes: ['id', 'paper_name']});
+    const paperlist = await paper.findAll({attributes: ['id', 'paper_name'], raw: true});
     return paperlist
 };
 let noteList = async function(paperId){
-    const arrayOfNotes = [];
-    const notelist = await note.findAll({where:{paper_id: paperId}, order:[['id', 'ASC']], attributes: ['id', 'done', 'note', 'paper_id']});
-    notelist.map(x=>arrayOfNotes.push(x.dataValues));
-    return arrayOfNotes
+    const notelist = await note.findAll({where:{paper_id: paperId}, order:[['id', 'ASC']], raw: true, attributes: ['id', 'done', 'note', 'paper_id']});
+    return notelist
 };
 let addPaper = async function(name){
     paper.create({
@@ -35,11 +33,11 @@ let deleteNote = async function(noteId){
         where: {id: noteId}
                 }) 
 };
-let done = async function(noteId){
+let done = async function(noteId, newValue){
    const value = await note.findAll({where: {
         id: noteId
     }, attributes: ['done']});
-    await note.update({done: !value[0].dataValues.done}, {where: {
+    await note.update({done: newValue}, {where: {
         id: noteId
     }})
 };
